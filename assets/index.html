@@ -1,54 +1,67 @@
 <!DOCTYPE html>
-<html>
-   <head>
-      <title>DSTAT</title>
-      <meta charset='UTF-8'>
-      <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-      <meta name='viewport' content='width=device-width'/>
-      <link rel='stylesheet' type='text/css' href='css/style.css'>
-     <link rel='stylesheet' type='text/css' href='https://use.fontawesome.com/releases/v5.8.1/css/all.css'>
-   </head>
-   <body>
-<div class='hamburger-menu'>
-  <input id='menu-toggle' type='checkbox'/>
-  <label class='menu-btn' for='menu-toggle'>
-    <span></span>
-  </label>
-  <ul class='menu-box'>
-    <a class='menu-item fas fa-home' href=''> Home</a>
-  </ul>
-      <center>
-         <div style='background: #06122f; width: 90%; margin: 20px 20px 20px 20px; border-radius: 15px' id='menu-l7'>
-            <h2 style="color: white">Live Layer 7 DSTAT</h2>
-            <h3><span id='attack-address'></span></h3>
-            <p><button type='button' class='green-btn' onclick='copyAddress()'>Copy</button></p>
-            <div id='graph' style='border-radius: 15px'></div>
-            </div>
-         <div style='background: #06122f; width: 90%; weight: 90%; margin: 20px 20px 20px 20px; border-radius: 15px' id='stats'>
-            <h2 style="color: white">History</h2> 
-            <p>Max RPS: <span id='max_requests'></span></p>
-            <p>RPS/Days: <span id='total_day_requests'></span></p>
-       </div>
-      </center>
-   </body>
-   <script language='JavaScript'>
-      document.getElementById('attack-address').innerHTML = window.location.href + 'attack/'
-      function copyAddress() {
-          var tempInput = document.createElement('input')
-          tempInput.style = 'position: absolute; left: -1000px; top: -1000px'
-          tempInput.value = document.getElementById('attack-address').innerHTML
-          document.body.appendChild(tempInput)
-          tempInput.select()
-          document.execCommand('copy')
-          document.body.removeChild(tempInput)
-      }
-          
-   </script>
-   <script src='/socket.io/socket.io.js'></script>
-   <script src='js/highcharts.js'></script>
-   <script src='js/requests.js'></script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSTAT</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
 
-   if ('caches' in window) {
+</head>
+<body>
+
+    <!-- Menu -->
+    <div class="hamburger-menu">
+        <input id="menu-toggle" type="checkbox"/>
+        <label class="menu-btn" for="menu-toggle">
+            <span></span>
+        </label>
+        <ul class="menu-box">
+            <a class="menu-item fas fa-home" href="#"> Home</a>
+        </ul>
+    </div>
+
+    <!-- Content -->
+    <center>
+        <div style="background: #06122f; width: 90%; margin: 20px; border-radius: 15px" id="menu-l7">
+            <h2 style="color: white">Live Layer 7 DSTAT</h2>
+            <h3><span id="attack-address"></span></h3>
+            <p><button type="button" class="green-btn" onclick="copyAddress()">Copy</button></p>
+            <div id="graph" style="border-radius: 15px"></div>
+        </div>
+
+        <div style="background: #06122f; width: 90%; margin: 20px; border-radius: 15px" id="stats">
+            <h2 style="color: white">History</h2> 
+            <p>Max RPS: <span id="max_requests"></span></p>
+            <p>RPS/Days: <span id="total_day_requests"></span></p>
+        </div>
+    </center>
+
+    <!-- JavaScript -->
+    <script>
+        document.getElementById('attack-address').innerHTML = window.location.href + 'attack/';
+        
+        function copyAddress() {
+            var tempInput = document.createElement('input');
+            tempInput.style = 'position: absolute; left: -1000px; top: -1000px';
+            tempInput.value = document.getElementById('attack-address').innerHTML;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+        }
+    </script>
+
+    <!-- Load JavaScript Files (Pastikan sudah dipindahkan ke /public/js/) -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/highcharts.js"></script>
+    <script src="/js/requests.js"></script>
+
+    <!-- Caching untuk PWA -->
+    <script>
+        if ('caches' in window) {
             caches.open('static-cache-v1').then(cache => {
                 const urlsToCache = [
                     '/',
@@ -65,6 +78,6 @@
             });
         }
     </script>
-<script src="https://itcjapan.net/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="3347ab5cb8c6435bf7cebd7f-|49" defer></script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'8fbd446b7b02ce35',t:'MTczNTg0NzMxMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"8fbd446b7b02ce35","version":"2024.10.5","r":1,"token":"5e4f693909ce4e41bf6778a424d1ced0","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}' crossorigin="anonymous"></script>
+
+</body>
 </html>
-  
