@@ -31,4 +31,4 @@ setInterval(async() => {
 
 setInterval(() => all_requests = 0, 1000 * 86400)
 
-http.listen(8080)
+http.listen(80)
