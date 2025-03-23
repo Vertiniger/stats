@@ -1,34 +1,49 @@
-const express = require('express'),
-	app = express(),
-	http = require('http').createServer(app),
-	io = require('socket.io')(http),
-	path = require('path'),
-	fs = require('fs')
-var all_requests = 0,
-	per_requests = 0
+const express = require("express");
+const fs = require("fs");
+const path = require("path");
 
-require('events').EventEmitter.defaultMaxListeners = Infinity
+const app = express();
+let all_requests = 0, per_requests = 0;
 
-app.use(express.static(path.join(__dirname, 'assets/')))
+// Event Listener agar tidak limit
+require("events").EventEmitter.defaultMaxListeners = Infinity;
 
-app.get('/attack', (req, res) => {
-	all_requests++
-	per_requests++
-	res.sendStatus(403)
-})
+// Pastikan folder "assets/" dapat diakses
+app.use(express.static(path.join(__dirname, "assets/")));
 
-setInterval(async() => {
-	const config = await fs.readFileSync('stats.json', 'utf8')
-	if(per_requests >= JSON.parse(config).max_requests) {
-		fs.writeFileSync('stats.json', JSON.stringify({
-			max_requests: per_requests
-		}))
-	}
+// Endpoint Attack
+app.get("/attack", (req, res) => {
+    all_requests++;
+    per_requests++;
+    res.sendStatus(403);
+});
 
-	io.emit('requests', all_requests, per_requests, JSON.parse(config).max_requests)
-	per_requests = 0
-}, 1000)
+// Fungsi untuk membaca & menulis stats.json
+const getStats = () => {
+    try {
+        return JSON.parse(fs.readFileSync("stats.json", "utf8"));
+    } catch (error) {
+        return { max_requests: 0 }; // Jika error, gunakan default
+    }
+};
 
-setInterval(() => all_requests = 0, 1000 * 86400)
+const saveStats = (max_requests) => {
+    fs.writeFileSync("stats.json", JSON.stringify({ max_requests }));
+};
 
-http.listen(80)
+// Interval untuk reset request per detik
+setInterval(() => {
+    const config = getStats();
+    if (per_requests >= config.max_requests) {
+        saveStats(per_requests);
+    }
+    per_requests = 0;
+}, 1000);
+
+// Reset semua request setiap hari
+setInterval(() => {
+    all_requests = 0;
+}, 1000 * 86400);
+
+// **Gunakan module.exports agar bisa dijalankan di Vercel**
+module.exports = app;
