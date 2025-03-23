@@ -4,6 +4,9 @@
     { "src": "index.js", "use": "@vercel/node" }
   ],
   "routes": [
+    { "src": "/assets/js", "dest": "requests.js" },
+    { "src": "/assets/js", "dest": "highcharts.js" },
+    { "src": "/attack", "dest": "index.js" },
     { "src": "/js/(.*)", "dest": "/public/js/$1" },
     { "src": "/css/(.*)", "dest": "/public/css/$1" },
     { "src": "/(.*)", "dest": "index.js" }
